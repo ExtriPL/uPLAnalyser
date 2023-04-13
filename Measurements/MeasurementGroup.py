@@ -8,7 +8,7 @@ class MeasurementGroup:
         self.__backgrounds: dict[int, Measurement] = dict()
         self.__mesaGroups: list[MesaGroup] = []
 
-    def group_name(self) -> str:
+    def name(self) -> str:
         return self.__group_name
 
     def backgrounds(self) -> dict[int, Measurement]:
@@ -18,7 +18,7 @@ class MeasurementGroup:
         integration_time = background.integration_time()
         self.__backgrounds[integration_time] = background
 
-    def mesa_groups(self):
+    def mesa_groups(self) -> list[MesaGroup]:
         return self.__mesaGroups
 
     def add_mesa_group(self, group: MesaGroup):

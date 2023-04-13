@@ -8,9 +8,10 @@ class Measurement:
         self.__integration_time: int = integration_time
         self.__power: int = Measurement.__power_from_name(power_string)
         self.__data: np.ndarray = data
-        self.__normalized_data = Measurement.__transfer_data_to_intensity_per_second(data, integration_time)
-        self.__label = Measurement.__create_label(integration_time, power_string)
-        self.__normalized_label = power_string
+        self.__normalized_data: np.ndarray = Measurement.__transfer_data_to_intensity_per_second(data, integration_time)
+        self.__label: str = Measurement.__create_label(integration_time, power_string)
+        self.__normalized_label: str = power_string
+        self.__background_noise: float = 0
 
     def integration_time(self) -> int:
         return self.__integration_time
@@ -20,6 +21,15 @@ class Measurement:
 
     def label(self) -> str:
         return self.__label
+
+    def normalized_data(self) -> np.ndarray:
+        return self.__normalized_data
+
+    def data(self) -> np.ndarray:
+        return self.__data
+
+    def background_noise(self) -> float:
+        return self.__background_noise
 
     def subtract(self, measurement: Measurement) -> None:
         self.__data[1] = np.subtract(self.__data[1], measurement.__data[1])
@@ -35,6 +45,7 @@ class Measurement:
 
         self.__data[1] -= shift
         self.__generate_normalized_data()
+        self.__background_noise = max(abs(left_mean - shift), abs(right_mean - shift))
 
     def plot(self, ax: matplotlib.axes.Axes) -> None:
         x = self.__data[0]
@@ -60,7 +71,7 @@ class Measurement:
         return str(integration_time) + "s_" + power_string
 
     @staticmethod
-    def __transfer_data_to_intensity_per_second(data, integration_time: int):
+    def __transfer_data_to_intensity_per_second(data, integration_time: int) -> np.ndarray:
         _normalizedData = np.array(data)
         _normalizedData[1] /= integration_time
 

@@ -5,7 +5,7 @@ import matplotlib.pyplot as plt
 
 
 class MesaGroup:
-    def __init__(self, name:str):
+    def __init__(self, name: str):
         self.__name: str = name
         self.__measurements: list[Measurement] = []
 
@@ -29,10 +29,13 @@ class MesaGroup:
         ax.set_title(self.__name)
         ax.set_xlabel("Wavelength [nm]")
         ax.set_ylabel("A.U.")
+        fig.canvas.manager.set_window_title(self.__name)
 
-    def plot_normalized_data(self):
-        ax: matplotlib.axes.Axes
-        fig, ax = plt.subplots()
+        return fig, ax
+
+    def plot_normalized_data(self, fig=None, ax: matplotlib.axes.Axes = None):
+        if ax is None or fig is None:
+            fig, ax = plt.subplots()
 
         for measurement in self.measurements():
             measurement.plot_normalized(ax)
@@ -41,3 +44,5 @@ class MesaGroup:
         ax.set_title(self.__name)
         ax.set_xlabel("Wavelength [nm]")
         ax.set_ylabel("Intensity [1/s]")
+
+        return fig, ax
