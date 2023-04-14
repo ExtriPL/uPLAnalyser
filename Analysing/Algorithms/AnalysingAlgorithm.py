@@ -8,3 +8,7 @@ class AnalysingAlgorithm:
     @abstractmethod
     def analyse(self, mesa: MesaGroup) -> AnalysedMesa:
         pass
+
+    @abstractmethod
+    def name(self) -> str:
+        pass

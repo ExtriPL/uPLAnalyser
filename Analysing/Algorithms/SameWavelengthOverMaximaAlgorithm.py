@@ -16,6 +16,9 @@ class SameWavelengthOverMaximaAlgorithm(AnalysingAlgorithm):
         self.__best_peak_count: int = best_peak_count
         self.__noise_threshold_multiplier: float = noise_threshold_multiplier
 
+    def name(self) -> str:
+        return SameWavelengthOverMaximaAlgorithm.__algorithm_name
+
     def best_peak_count(self) -> int:
         return self.__best_peak_count
 

@@ -32,7 +32,7 @@ class AnalysedSet:
         ln_x = np.log(np.abs(self.data()[0]))
         ln_y = np.log(np.abs(self.data()[1]))
 
-        ax.scatter(ln_x, ln_y, label=self.label(), s=5)
+        ax.scatter(ln_x, ln_y, label=self.label() + "_s:" + str(round(self.__slope, 3)), s=5)
         lower_bound = 0.95 * min(ln_x)
         upper_bound = 1.05 * max(ln_x)
 
@@ -48,5 +48,5 @@ class AnalysedSet:
         log_y = np.log(np.abs(data[1]))
 
         slope, intercept, r_value, _, _ = sc.stats.linregress(log_x, log_y) # slope, intercept, r_value, p_value, std_err
-        # return r_value, slope, intercept
-        return np.max(data[1]), slope, intercept
+        return r_value, slope, intercept
+        # return np.max(data[1]), slope, intercept

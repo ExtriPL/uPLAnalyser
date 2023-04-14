@@ -6,13 +6,20 @@ import numpy as np
 from Measurements.Measurement import Measurement
 from Measurements.MeasurementGroup import MeasurementGroup
 from Measurements.MesaGroup import MesaGroup
+from Utilities.Logger import Logger
 
 
 class DataLoader:
+    __logger: Logger = Logger("Loader")
+
     def __init__(self, path: str):
         self.__path: str = path
 
+    def path(self) -> str:
+        return self.__path
+
     def load_data(self) -> list[MeasurementGroup]:
+        DataLoader.__logger.log("Begin loading data from \"" + self.__path + "/\"")
         groups = []
 
         for measurement_group_name in os.listdir(self.__path):
@@ -28,6 +35,7 @@ class DataLoader:
 
     @staticmethod
     def __load_measurement_group(group_path, group_name) -> MeasurementGroup:
+        DataLoader.__logger.log("Loading group \"" + group_name + "\"")
         group: MeasurementGroup = MeasurementGroup(group_name)
 
         for name in os.listdir(group_path):
@@ -45,6 +53,7 @@ class DataLoader:
 
     @staticmethod
     def __load_mesa_group(mesa_group_path: str, mesa_group_name: str) -> MesaGroup:
+        DataLoader.__logger.log("Loading mesa \"" + mesa_group_name + "\"")
         mesa_group: MesaGroup = MesaGroup(mesa_group_name)
 
         for name in os.listdir(mesa_group_path):
@@ -60,6 +69,7 @@ class DataLoader:
 
     @staticmethod
     def __load_measurement_file(measurement_path: str, measurement_name: str) -> Measurement:
+        DataLoader.__logger.log("Loading measurement \"" + measurement_name + "\"")
         measurement_name = measurement_name.removesuffix(".dat")
         splitted = measurement_name.split("_")
 
