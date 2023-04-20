@@ -31,7 +31,7 @@ class AnalysedMesa:
         for analysed_set in self.analysed_sets():
             analysed_set.plot(ax)
 
-        ax.legend()
+        ax.legend(fontsize=5)
         ax.set_title(self.mesa().name() + "_" + self.algorithm())
         ax.set_xlabel("Power [nW]")
         ax.set_ylabel("Intensity [A.U/s]")
@@ -46,7 +46,7 @@ class AnalysedMesa:
         for analysed_set in self.analysed_sets():
             analysed_set.plot_loglog(ax, with_fit)
 
-        ax.legend()
+        ax.legend(fontsize=5)
         ax.set_title(self.mesa().name() + "_" + self.algorithm())
         ax.set_xlabel("log(Power)")
         ax.set_ylabel("log(Intensity)")
@@ -61,6 +61,6 @@ class AnalysedMesa:
         self.mesa().plot_normalized_data(fig, ax)
 
         for analysed_set in self.analysed_sets():
-            ax.scatter(np.repeat(analysed_set.wavelength(), len(analysed_set.data()[1])), analysed_set.data()[1], marker="x", s=3)
+            ax.scatter(analysed_set.wavelengths(), analysed_set.data()[1], marker="x", s=3)
 
         return fig, ax

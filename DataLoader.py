@@ -71,16 +71,18 @@ class DataLoader:
     def __load_measurement_file(measurement_path: str, measurement_name: str) -> Measurement:
         DataLoader.__logger.log("Loading measurement \"" + measurement_name + "\"")
         measurement_name = measurement_name.removesuffix(".dat")
-        splitted = measurement_name.split("_")
+        split = measurement_name.split("_")
 
-        integration_time: int = 0
+        integration_time: int
         power_name: str = ""
+        power_label: str = ""
 
-        if len(splitted) == 2:  # Background file
-            integration_time = int(splitted[-1].removesuffix("s"))
+        if len(split) == 2:  # Background file
+            integration_time = int(split[-1].removesuffix("s"))
         else:  # Mesa point data
-            power_name = splitted[-1]
-            integration_time = int(splitted[-2].removesuffix("s"))
+            power_name = split[3]
+            power_label = "_".join(split[3:])
+            integration_time = int(split[2].removesuffix("s"))
 
         x_data = []
         y_data = []
@@ -91,9 +93,9 @@ class DataLoader:
             next(reader)
 
             for row in reader:
-                splittedRow = row[0].split("\t")
-                x = float(splittedRow[0])
-                y = float(splittedRow[1])
+                split_row = row[0].split("\t")
+                x = float(split_row[0])
+                y = float(split_row[1])
 
                 x_data.append(x)
                 y_data.append(y)
@@ -102,4 +104,4 @@ class DataLoader:
         data[0] = np.array(x_data)
         data[1] = np.array(y_data)
 
-        return Measurement(integration_time, power_name, data)
+        return Measurement(integration_time, power_name, power_label, data)

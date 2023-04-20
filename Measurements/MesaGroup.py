@@ -25,7 +25,7 @@ class MesaGroup:
         for measurement in self.measurements():
             measurement.plot(ax)
 
-        ax.legend()
+        ax.legend(fontsize=5)
         ax.set_title(self.__name)
         ax.set_xlabel("Wavelength [nm]")
         ax.set_ylabel("A.U.")
@@ -40,7 +40,7 @@ class MesaGroup:
         for measurement in self.measurements():
             measurement.plot_normalized(ax)
 
-        ax.legend()
+        ax.legend(fontsize=5)
         ax.set_title(self.__name)
         ax.set_xlabel("Wavelength [nm]")
         ax.set_ylabel("Intensity [1/s]")
