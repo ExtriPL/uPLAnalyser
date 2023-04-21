@@ -56,7 +56,7 @@ class Saver:
 
             fig, ax = get_fig_and_ax(mesa_group)
             fig.savefig(mesa_path, dpi=500)
-            plt.close()
+            plt.close("all")
 
     def save_analysed_groups(self, groups: list[AnalysedGroup], with_fit: bool = False, over_data: bool = False) -> None:
         Saver.__logger.log("Begin saving " + str(len(groups)) + " analysed group(s) "
@@ -104,7 +104,7 @@ class Saver:
             mesa_path = mesa_directory + analysed_mesa.mesa().name() + "_" + analysed_mesa.algorithm() + "_over data.png"
             fig, ax = analysed_mesa.plot_over_data()
             fig.savefig(mesa_path, dpi=500)
-            plt.close()
+            plt.close("all")
 
     @staticmethod
     def __generate_statistic_string(statistics: dict[str, list[AnalysedMesa]]) -> str:

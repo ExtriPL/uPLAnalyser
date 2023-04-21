@@ -15,13 +15,13 @@ class AnalysedSet:
         self.__score = fit_statistics.r_value()
 
     def wavelength(self) -> float:
-        return self.__wavelengths[0]
+        return self.__wavelengths[-1]
 
     def wavelengths(self) -> np.ndarray:
         return self.__wavelengths
 
     def label(self) -> str:
-        return str(self.__wavelengths[-1]) + " nm"
+        return str(self.wavelength()) + " nm"
 
     def data(self) -> np.ndarray:
         return self.__data
