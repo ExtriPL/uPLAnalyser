@@ -80,7 +80,7 @@ class DataLoader:
         if len(split) == 2:  # Background file
             integration_time = int(split[-1].removesuffix("s"))
         else:  # Mesa point data
-            power_name = split[3]
+            power_name = split[3].replace("p", ".")
             power_label = "_".join(split[3:])
             integration_time = int(split[2].removesuffix("s"))
 

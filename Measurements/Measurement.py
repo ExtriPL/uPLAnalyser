@@ -6,7 +6,7 @@ import numpy as np
 class Measurement:
     def __init__(self, integration_time: int, power_string: str, power_label: str, data: np.ndarray):
         self.__integration_time: int = integration_time
-        self.__power: int = Measurement.__power_from_name(power_string)
+        self.__power: float = Measurement.__power_from_name(power_string)
         self.__data: np.ndarray = data
         self.__normalized_data: np.ndarray = Measurement.__transfer_data_to_intensity_per_second(data, integration_time)
         self.__label: str = Measurement.__create_label(integration_time, power_label)
@@ -16,7 +16,7 @@ class Measurement:
     def integration_time(self) -> int:
         return self.__integration_time
 
-    def power(self) -> int:
+    def power(self) -> float:
         return self.__power
 
     def label(self) -> str:
@@ -91,7 +91,7 @@ class Measurement:
         return _normalizedData
 
     @staticmethod
-    def __power_from_name(power_name: str) -> int:
+    def __power_from_name(power_name: str) -> float:
         if len(power_name) == 0:
             return 0
 
@@ -102,4 +102,4 @@ class Measurement:
             suffix = "uW"
             multiplier *= 1000
 
-        return int(power_name.removesuffix(suffix)) * multiplier
+        return float(power_name.removesuffix(suffix)) * multiplier
