@@ -20,14 +20,20 @@ analysing_algorithms: list[AnalysingAlgorithm] = [
 loader = DataLoader("Data")
 measurement_groups: list[MeasurementGroup] = loader.load_data()
 
-# raw_analysed_groups: list[AnalysedGroup] = DataAnalyser.analyse_measurement_groups(measurement_groups, analysing_algorithms)
-# rawSaver = Saver("Raw")
-# rawSaver.save_measurement_groups_normalized(measurement_groups)
-# rawSaver.save_analysed_groups(raw_analysed_groups, with_fit=True, over_data=True)
+# raw_saver = Saver("Raw")
+# raw_saver.save_measurement_groups_normalized(measurement_groups)
 
-DataProcessor.process(measurement_groups)
-processed_analysed_groups: list[AnalysedGroup] = DataAnalyser.analyse_measurement_groups(measurement_groups, analysing_algorithms)
+without_bring_to_zero_saver = Saver("OnlySubtractBackground")
+DataProcessor.process(measurement_groups, subtract_background=True, bring_to_zero=False)
+without_bring_to_zero_saver.save_measurement_groups_normalized(measurement_groups)
+without_bring_to_zero_analysed_groups: list[AnalysedGroup] = DataAnalyser.analyse_measurement_groups(
+    measurement_groups, analysing_algorithms)
+without_bring_to_zero_saver.save_analysed_groups(without_bring_to_zero_analysed_groups, with_fit=True, over_data=True)
 
+
+DataProcessor.process(measurement_groups, subtract_background=False, bring_to_zero=True)
+processed_analysed_groups: list[AnalysedGroup] = DataAnalyser.analyse_measurement_groups(measurement_groups,
+                                                                                         analysing_algorithms)
 processedSaver = Saver("Results")
 processedSaver.save_measurement_groups_normalized(measurement_groups)
 processedSaver.save_analysed_groups(processed_analysed_groups, with_fit=True, over_data=True)

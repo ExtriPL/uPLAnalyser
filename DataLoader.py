@@ -88,14 +88,13 @@ class DataLoader:
         y_data = []
 
         with open(measurement_path, 'r', newline='') as in_file:
-            reader = csv.reader(in_file)
+            reader = csv.reader(in_file, delimiter="\t")
             # skip header
             next(reader)
 
             for row in reader:
-                split_row = row[0].split("\t")
-                x = float(split_row[0])
-                y = float(split_row[1])
+                x = float(row[0].replace(",", "."))
+                y = float(row[1].replace(",", "."))
 
                 x_data.append(x)
                 y_data.append(y)

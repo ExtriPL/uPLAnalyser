@@ -37,7 +37,7 @@ class Measurement:
 
     def bring_to_zero(self) -> None:
         data_length: int = len(self.__data[1])
-        sample_count: int = int(data_length * 0.05)
+        sample_count: int = int(data_length * 0.02)
 
         left_samples = self.__data[1][:sample_count]
         right_samples = self.__data[1][-sample_count:]
