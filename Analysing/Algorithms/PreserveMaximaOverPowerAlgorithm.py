@@ -12,8 +12,9 @@ import scipy as sc
 class PreserveMaximaOverPowerAlgorithm(StrongestPowerAlgorithm):
     __algorithm_name: str = "PMoP"
 
-    def __init__(self, best_peak_count: int, noise_threshold_multiplier: float = 1.0):
+    def __init__(self, best_peak_count: int, noise_threshold_multiplier: float = 1.0, max_distance: float = 1.0):
         super().__init__(best_peak_count, noise_threshold_multiplier)
+        self.__max_distance: float = max_distance
 
     def name(self) -> str:
         return PreserveMaximaOverPowerAlgorithm.__algorithm_name
@@ -21,14 +22,13 @@ class PreserveMaximaOverPowerAlgorithm(StrongestPowerAlgorithm):
     def analyse(self, mesa: MesaGroup) -> AnalysedMesa:
         power_ordered_measurements = mesa.measurements()
         power_ordered_measurements.sort(key=AnalysingAlgorithm.measurement_power)
-        strongest_measurement = power_ordered_measurements[-1]
 
         peaks: list[PeakStatistics] = self.get_peaks(power_ordered_measurements)
 
         analysed_sets = []
 
         for peak in peaks:
-            if peak.is_above_noise():
+            if not peak.is_above_noise():
                 continue
 
             x: list[float] = []
@@ -36,15 +36,16 @@ class PreserveMaximaOverPowerAlgorithm(StrongestPowerAlgorithm):
             wavelengths = []
 
             analysed_wavelength = peak.wavelength()
+            analysed_index = peak.index()
 
             for measurement in power_ordered_measurements:
                 power = measurement.power()
                 normalized_data = measurement.normalized_data()
 
-                peak_index = PreserveMaximaOverPowerAlgorithm.__find_closest_local_maximum_index(
-                    normalized_data, analysed_wavelength)
-                analysed_wavelength = normalized_data[0][peak_index]
-                intensity = normalized_data[1][peak_index]
+                analysed_index = PreserveMaximaOverPowerAlgorithm.__find_closest_local_maximum_index(
+                    normalized_data, analysed_wavelength, self.__max_distance, analysed_index)
+                analysed_wavelength = normalized_data[0][analysed_index]
+                intensity = normalized_data[1][analysed_index]
 
                 wavelengths.append(analysed_wavelength)
                 x.append(power)
@@ -67,10 +68,13 @@ class PreserveMaximaOverPowerAlgorithm(StrongestPowerAlgorithm):
         return analysed_mesa
 
     @staticmethod
-    def __find_closest_local_maximum_index(data: np.ndarray, start_wavelength: float) -> int:
+    def __find_closest_local_maximum_index(data: np.ndarray, start_wavelength: float, max_distance: float, start_index: int) -> int:
         peaks, _ = sc.signal.find_peaks(data[1])
         distances = np.abs(data[0][peaks] - start_wavelength)
 
         peak_index = np.argmin(distances)
-        return peaks[peak_index]
 
+        if distances[peak_index] < max_distance:
+            return peaks[peak_index]
+
+        return start_index

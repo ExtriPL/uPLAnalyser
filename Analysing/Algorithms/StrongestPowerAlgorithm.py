@@ -22,6 +22,9 @@ class StrongestPowerAlgorithm(AnalysingAlgorithm):
     def best_peak_count(self) -> int:
         return self.__best_peak_count
 
+    def noise_threshold_multiplier(self) -> float:
+        return self.__noise_threshold_multiplier
+
     def get_peaks(self, power_ordered_measurements: list[Measurement]) -> list[PeakStatistics]:
         strongest_measurement = power_ordered_measurements[-1]
         peaks, _ = sc.signal.find_peaks(strongest_measurement.normalized_data()[1])
@@ -34,9 +37,10 @@ class StrongestPowerAlgorithm(AnalysingAlgorithm):
             wavelength: float = strongest_measurement.data()[0][peak_index]
             score: float = prominences[i]
             intensity: float = strongest_measurement.data()[1][peak_index]
+            intensity_normalized: float = strongest_measurement.normalized_data()[1][peak_index]
             above_noise: bool = intensity < self.__noise_threshold_multiplier * strongest_measurement.background_noise()
 
-            statistics: PeakStatistics = PeakStatistics(wavelength, intensity, score, peak_index, above_noise)
+            statistics: PeakStatistics = PeakStatistics(wavelength, intensity, intensity_normalized, score, peak_index, above_noise)
             statistics_list.append(statistics)
 
         return statistics_list

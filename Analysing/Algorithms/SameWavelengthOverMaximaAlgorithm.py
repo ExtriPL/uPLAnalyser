@@ -29,7 +29,7 @@ class SameWavelengthOverMaximaAlgorithm(StrongestPowerAlgorithm):
             return a_set.score()
 
         for peak in peaks:
-            if peak.is_above_noise():
+            if not peak.is_above_noise():
                 continue
 
             wavelength = peak.wavelength()
