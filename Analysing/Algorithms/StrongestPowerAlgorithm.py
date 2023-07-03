@@ -38,7 +38,7 @@ class StrongestPowerAlgorithm(AnalysingAlgorithm):
             score: float = prominences[i]
             intensity: float = strongest_measurement.data()[1][peak_index]
             intensity_normalized: float = strongest_measurement.normalized_data()[1][peak_index]
-            above_noise: bool = intensity < self.__noise_threshold_multiplier * strongest_measurement.background_noise()
+            above_noise: bool = intensity > self.__noise_threshold_multiplier * strongest_measurement.background_noise()
 
             statistics: PeakStatistics = PeakStatistics(wavelength, intensity, intensity_normalized, score, peak_index, above_noise)
             statistics_list.append(statistics)

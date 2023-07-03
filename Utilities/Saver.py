@@ -12,8 +12,9 @@ from Utilities.Logger import Logger
 class Saver:
     __logger = Logger("Saver")
 
-    def __init__(self, output_path: str):
+    def __init__(self, output_path: str, overwrite_files: bool = True):
         self.output_path: str = output_path
+        self.__overwrite_files: bool = overwrite_files
 
     def save_measurement_groups(self, groups: list[MeasurementGroup]) -> None:
         Saver.__logger.log("Begin saving " + str(len(groups)) + " group(s) in \"" + self.output_path + "\"")
@@ -54,6 +55,9 @@ class Saver:
 
             mesa_path = path + mesa_group.name() + file_name_subfix
 
+            if not self.__overwrite_files and os.path.exists(mesa_path):
+                continue
+
             fig, ax = get_fig_and_ax(mesa_group)
             fig.savefig(mesa_path, dpi=500)
             plt.close("all")
@@ -86,7 +90,7 @@ class Saver:
                 statistics[analysed_mesa.algorithm()] = []
 
             statistics[analysed_mesa.algorithm()].append(analysed_mesa)
-            Saver.__save_analysed_mesa(analysed_mesa, mesa_directory, with_fit, over_data)
+            Saver.__save_analysed_mesa(analysed_mesa, mesa_directory, with_fit, over_data, self.__overwrite_files)
 
         statistics_text = Saver.__generate_statistic_string(statistics)
         statistics_file = open(path + "statistics.txt", "w")
@@ -94,8 +98,12 @@ class Saver:
         statistics_file.close()
 
     @staticmethod
-    def __save_analysed_mesa(analysed_mesa: AnalysedMesa, mesa_directory: str, with_fit: bool, over_data: bool) -> None:
+    def __save_analysed_mesa(analysed_mesa: AnalysedMesa, mesa_directory: str, with_fit: bool
+                             , over_data: bool, overwrite_files: bool) -> None:
         mesa_path = mesa_directory + analysed_mesa.mesa().name() + "_" + analysed_mesa.algorithm() + ".png"
+
+        if not overwrite_files and os.path.exists(mesa_path):
+            return
 
         fig, ax = analysed_mesa.plot_loglog(with_fit)
         fig.savefig(mesa_path, dpi=500)
